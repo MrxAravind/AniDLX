@@ -16,7 +16,10 @@ class Gogo:
     def gogo_episode(self, id):
         data = requests.get(f"{self.base}/episode/{id}").json()
         return data
-
+        
+    def gogo_download(self, id):
+        data = requests.get(f"{self.base}/download/{id}").json()
+        return data
 
 class TechZApi(Gogo):
     def __init__(self) -> None:
