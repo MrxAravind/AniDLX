@@ -1,45 +1,43 @@
-import aiohttp
-import asyncio
-import aiofiles
-import os
-from typing import List
+import aiohttp, asyncio, aiofiles, os
+from pypdl import Pypdl
 
 folder_path = "./Downloads/temp/"
 
-chunksDownloaded = 0
-sizeDownloaded = 0
 
-async def download_direct_links(session: aiohttp.ClientSession, urls: List[str], workers: int):
-    TOTAL = len(urls)
-    chunkSize = TOTAL // workers
-    chunkList = [urls[i * chunkSize:(i + 1) * chunkSize] for i in range(workers)]
-    chunkList[-1].extend(urls[workers * chunkSize:])
-
-    tasks = [progress(TOTAL)]
-    for pos, chunk in enumerate(chunkList, start=1):
-        tasks.append(downloadChunks(pos, session, chunk))
-
-    await asyncio.gather(*tasks)
+async def startDownload( url, path):
+    print(">> Starting Download")
+    dl = Pypdl()
+    dl.start(url=url,file_path=path)
+    
 
 def resetCache():
     global chunksDownloaded, sizeDownloaded
     chunksDownloaded = 0
     sizeDownloaded = 0
-
-    os.makedirs(folder_path, exist_ok=True)
+    try:
+        os.mkdir("./Downloads")
+    except:
+        pass
+    try:
+        os.mkdir(folder_path)
+    except:
+        pass
 
     files = os.listdir(folder_path)
     for file in files:
-        os.remove(os.path.join(folder_path, file))
+        os.remove(folder_path + file)
 
-def clearLine(n: int = 1):
-    for _ in range(n):
+
+def clearLine(n=1):
+    for i in range(n):
         print("\033[1A\x1b[2K", end="")
 
-async def progress(TOTAL: int):
+
+async def progress(TOTAL):
     global chunksDownloaded, sizeDownloaded
     x = 0
     c = 0
+    t = 0
 
     print("-" * 88)
     print(
@@ -57,13 +55,16 @@ async def progress(TOTAL: int):
     )
     print("-" * 88 + "\n\n")
 
-    while chunksDownloaded < TOTAL:
-        speed = round((sizeDownloaded - x) / (1024 * 1024 * 2), 2)
-        speed2 = round((chunksDownloaded - c) / 2)
+    while True:
+        if chunksDownloaded == TOTAL:
+            break
+
+        speed = round((sizeDownloaded - x) / (1024 * 1024 * 2), 2)  # per sec
+        speed2 = round((chunksDownloaded - c) / 2)  # per sec
         if speed2 == 0:
             speed2 = 1
-        time = round(((TOTAL - chunksDownloaded) / speed2) / 60, 2)
-        size = round(sizeDownloaded / (1024 * 1024))
+        time = round(((TOTAL - chunksDownloaded) / speed2) / 60, 2)  # in min
+        size = round(sizeDownloaded / (1024 * 1024))  # in MB
 
         clearLine(2)
         print(
@@ -85,7 +86,8 @@ async def progress(TOTAL: int):
 
         await asyncio.sleep(2)
 
-async def downloadChunks(pos: int, session: aiohttp.ClientSession, chunks: List[str]):
+
+async def downloadChunks(pos, session: aiohttp.ClientSession, chunks):
     global chunksDownloaded, sizeDownloaded
 
     async with aiofiles.open(f"{folder_path}{pos}.ts", "ab") as f:
