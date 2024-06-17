@@ -139,8 +139,8 @@ async def StartDownload():
         try:
             anime['name']= anime['name'].replace("/", " ").replace("\\",' ')
             print(f"\n\n>> Downloading Episode {ep} - {quality}p")
-            data = TechZApi.gogo_episode(episode_id)["results"]
-            file = data["stream"]["sources"][0]["file"]
+            #data = TechZApi.gogo_episode(episode_id)["results"]
+            #file = data["stream"]["sources"][0]["file"]
             await startM3U8Download(session, file, quality, workers)
             print(f">> Episode {ep} - {quality}p Downloaded")
             filepath = convertFilePath(
