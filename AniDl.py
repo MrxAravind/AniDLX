@@ -1,7 +1,7 @@
 import asyncio, aiohttp, os
 from Utils.File import convertFilePath
 from Utils.TechZApi import TechZApi
-from Utils.Downloader import startM3U8Download, resetCache
+from Utils.Downloader import startDownload, resetCache
 from Utils.FFmpeg import ConvertTsToMp4
 
 TechZApi = TechZApi()
@@ -141,13 +141,13 @@ async def StartDownload():
             print(f"\n\n>> Downloading Episode {ep} - {quality}p")
             data = TechZApi.gogo_download(episode_id)["results"]
             url = [ [ i,data[i]] for i in data ]
-            await download_direct_links(session, url[-1][-1], workers)
+            await startDownload(url[-1][-1], f"./Downloads/{anime.get('name')}/{anime.get('name')} - Episode {ep} - {url[-1][0]}p.mp4")
             print(f">> Episode {ep} - {quality}p Downloaded")
-            filepath = convertFilePath(
+            #filepath = convertFilePath(
                 f"./Downloads/{anime.get('name')}/{anime.get('name')} - Episode {ep} - {url[-1][0]}p.mp4"
             )
-            ConvertTsToMp4(filepath)
-            resetCache()
+            #ConvertTsToMp4(filepath)
+            #resetCache()
         except Exception as e:
             print("Failed To Download Episode", ep)
             print(">> Error: ", e)
