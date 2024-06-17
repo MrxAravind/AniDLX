@@ -139,12 +139,12 @@ async def StartDownload():
         try:
             anime['name']= anime['name'].replace("/", " ").replace("\\",' ')
             print(f"\n\n>> Downloading Episode {ep} - {quality}p")
-            #data = TechZApi.gogo_episode(episode_id)["results"]
-            #file = data["stream"]["sources"][0]["file"]
-            await startM3U8Download(session, file, quality, workers)
+            data = TechZApi.gogo_download(episode_id)["results"]
+            url = [ [ i,data[i]] for i in data ]
+            await download_direct_links(session, url[-1][-1], workers)
             print(f">> Episode {ep} - {quality}p Downloaded")
             filepath = convertFilePath(
-                f"./Downloads/{anime.get('name')}/{anime.get('name')} - Episode {ep} - {quality}p.mp4"
+                f"./Downloads/{anime.get('name')}/{anime.get('name')} - Episode {ep} - {url[-1][0]}p.mp4"
             )
             ConvertTsToMp4(filepath)
             resetCache()
