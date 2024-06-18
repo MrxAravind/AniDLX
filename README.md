@@ -1,12 +1,13 @@
 <p align="center">
-  <a href="https://github.com/TechShreyash/AniDL">
+  <a href="https://github.com/MrxAravind/AniDLX">
     <img src="https://socialify.git.ci/TechShreyash/AniDL/image?description=1&font=Source%20Code%20Pro&forks=1&issues=1&pattern=Charlie%20Brown&pulls=1&stargazers=1&theme=Dark" alt="AniDL" width="640" height="320" /></a></p>
-<h1 align="center">AniDL</h1>
-<h3 align="center">A Light Weight Anime Downloader Built In Python Powered By TechZApi</h3>
+<h1 align="center">AniDLX</h1>
+<h3 align="center">A Light Weight Anime Downloader Telegram Bot Built In Python</h3>
 
 -   Batch Downloader Support
 -   Fast Download Speed
--   Parallel Download Support
+-   Aria2c Added for Reliable Service
+-   Upload To Telegram
 
 ## Installation
 
@@ -16,20 +17,17 @@
 pip install -U -r requirements.txt
 ```
 
--   Install [ffmpeg](https://ffmpeg.org/)
-
-    > For Windows Users, You must add ffmpeg to path. Download Link : https://drive.google.com/file/d/1jaE4SFombXVXvLsaRtU0siQFTF7F3hL0/view?usp=sharing
-
 ## How To Use
 
--   Start AniDL
+-   Start AniDL Bot
 
 ```
-python AniDL.py
+python AniDl.py
 ```
-
--   Enter Anime Name
--   Enter Episodes To Download
+-   Open Bot In Telegram
+-   Use /Search <to Search Query>
+-   Than Select Required Anime
+-   Than Enter Episodes To Download
 
 ```
 - Episode No. To Download Single Episode
@@ -37,10 +35,13 @@ python AniDL.py
 - Enter \* To Download All Available Episodes
 ```
 
--   Wait For Download To Complete All Episodes Will Be Saved In Downloads Folder
+-   Wait For Download To Complete All Episodes Will Be Send To You
 
-## Powered By TechZApi
 
-### Join For Latest Updates
+## To-Do List 
+- Upload To Switch
+- Option Return Only Links
+- Rclone Upload
 
-[![Telegram Channel](https://img.shields.io/static/v1?label=Join&message=Telegram%20Channel&color=blueviolet&style=for-the-badge&logo=telegram&logoColor=violet)](https://telegram.me/TechZBots) [![Telegram Group](https://img.shields.io/static/v1?label=Join&message=Telegram%20Group&color=blueviolet&style=for-the-badge&logo=telegram&logoColor=violet)](https://telegram.me/TechZBots_Support)
+-Open Issue for Suggestions 😁
+## Thanks To TechZApi
