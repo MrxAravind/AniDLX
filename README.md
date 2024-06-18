@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/MrxAravind/AniDLX">
-    <img src="https://socialify.git.ci/TechShreyash/AniDL/image?description=1&font=Source%20Code%20Pro&forks=1&issues=1&pattern=Charlie%20Brown&pulls=1&stargazers=1&theme=Dark" alt="AniDL" width="640" height="320" /></a></p>
+    <img src="https://socialify.git.ci/MrxAravind/AniDLX/image?description=1&descriptionEditable=A%20Light%20Weight%20Anime%20Downloader%20Telegram%20Bot%20Built%20In%20Python&font=Jost&forks=1&issues=1&name=1&pattern=Circuit%20Board&stargazers=1&theme=Dark" alt="AniDL" width="640" height="320" /></a></p>
 <h1 align="center">AniDLX</h1>
 <h3 align="center">A Light Weight Anime Downloader Telegram Bot Built In Python</h3>
 
