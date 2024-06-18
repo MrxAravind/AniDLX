@@ -25,7 +25,7 @@ pip install -U -r requirements.txt
 python AniDl.py
 ```
 -   Open Bot In Telegram
--   Use /Search <to Search Query>
+-   Use /Search Query
 -   Than Select Required Anime
 -   Than Enter Episodes To Download
 
@@ -39,9 +39,11 @@ python AniDl.py
 
 
 ## To-Do List 
+
 - Upload To Switch
 - Option Return Only Links
 - Rclone Upload
+  
+- Open Issue for Suggestions 😁
 
--Open Issue for Suggestions 😁
 ## Thanks To TechZApi
