@@ -5,7 +5,8 @@
 <h3 align="center">A Light Weight Anime Downloader Telegram Bot Built In Python</h3>
 
 -   Batch Downloader Support
--   Changed To Download API from HLS
+-   Changed To Download API
+-   & HLS for Backup
 -   Aria2c for Reliable & Fast Download
 -   Upload To Telegram
 
