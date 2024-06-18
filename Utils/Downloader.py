@@ -1,7 +1,6 @@
-import aiohttp, asyncio, aiofiles, os
+import os
 import aria2p
 
-folder_path = "./Downloads/temp/"
 
 
 def add_download(api, uri):
