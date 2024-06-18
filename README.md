@@ -6,7 +6,7 @@
 
 -   Batch Downloader Support
 -   Fast Download Speed
--   Aria2c Added for Reliable Service
+-   Added Aria2c for Reliable Service
 -   Upload To Telegram
 
 ## Installation
