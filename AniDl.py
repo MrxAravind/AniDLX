@@ -1,10 +1,22 @@
 import asyncio, aiohttp, os
+import aria2p
 from Utils.File import convertFilePath
 from Utils.TechZApi import TechZApi
-from Utils.Downloader import startDownload, resetCache
+from Utils.Downloader import startDownload, get_status
 from Utils.FFmpeg import ConvertTsToMp4
 
 TechZApi = TechZApi()
+
+os.system("nohup aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all > aria2c.log 2>&1 &")
+
+aria2 = aria2p.API(
+    aria2p.Client(
+        host="http://localhost",
+        port=6800,
+        secret=""
+    )
+)
+
 
 # Getting Anime Name
 
@@ -141,17 +153,21 @@ async def StartDownload():
             print(f"\n\n>> Downloading Episode {ep} - {quality}p")
             data = TechZApi.gogo_download(episode_id)["results"]
             url = [ [ i,data[i]] for i in data ]
-            await startDownload(url[-1][-1], f"./Downloads/{anime.get('name')}/{anime.get('name')} - Episode {ep} - {url[-1][0]}p.mp4")
-            print(f">> Episode {ep} - {quality}p Downloaded")
-            #filepath = convertFilePath(
-                #f"./Downloads/{anime.get('name')}/{anime.get('name')} - Episode {ep} - {url[-1][0]}p.mp4")
-            #ConvertTsToMp4(filepath)
-            #resetCache()
+            file_path = f"./Downloads/{anime.get('name')}/{anime.get('name')} - Episode {ep} - {url[-1][0]}p.mp4"
+            vid = await startDownload(aria2,url[-1][-1])
+            vstatus = get_status(aria2,vid.gid)
+            file_name = vstatus['file_name']
+            while True:
+               if vstatus['is_complete']:
+                        #os.system(f"ffmpeg -i {status['file_name']} ss.jpg") thumbnail if uploading to tg
+                        print(f">> Episode {ep} - {quality}p Downloaded")
+                        os.rename(file_name,f"{anime.get('name')} - Episode {ep} - {url[-1][0]}p.mp4")
+                        
+            
         except Exception as e:
             print("Failed To Download Episode", ep)
             print(">> Error: ", e)
             continue
-    await session.close()
 
 
 asyncio.run(StartDownload())
