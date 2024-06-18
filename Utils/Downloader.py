@@ -1,101 +1,55 @@
 import aiohttp, asyncio, aiofiles, os
-from pypdl import Pypdl
+import aria2p
 
 folder_path = "./Downloads/temp/"
 
 
-async def startDownload( url, path):
+def add_download(api, uri):
+    download = api.add_uris([uri])
+    return download
+
+def get_status(api, gid):
+    try:
+        download = api.get_download(gid)
+        total_length = download.total_length
+        completed_length = download.completed_length
+        download_speed = download.download_speed
+        file_name = download.name
+        progress = (completed_length / total_length) * 100 if total_length > 0 else 0
+        is_complete = download.is_complete
+
+        return {
+            "gid": download.gid,
+            "status": download.status,
+            "file_name": file_name,
+            "total_length": format_bytes(total_length),
+            "completed_length": format_bytes(completed_length),
+            "download_speed": format_bytes(download_speed),
+            "progress": f"{progress:.2f}%",
+            "is_complete": is_complete
+        }
+    except Exception as e:
+        print(f"Failed to get status for GID {gid}: {e}")
+        raise
+
+def remove_download(api, gid):
+    try:
+        api.remove([gid])
+        print(f"Successfully removed download: {gid}")
+    except Exception as e:
+        print(f"Failed to remove download: {e}")
+        raise
+
+def format_bytes(byte_count):
+    suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+    index = 0
+    while byte_count >= 1024 and index < len(suffixes) - 1:
+        byte_count /= 1024
+        index += 1
+    return f"{byte_count:.2f} {suffixes[index]}"
+
+
+async def startDownload(aria2,url):
     print(">> Starting Download")
-    dl = Pypdl()
-    dl.start(url=url,file_path=path)
-    
-
-def resetCache():
-    global chunksDownloaded, sizeDownloaded
-    chunksDownloaded = 0
-    sizeDownloaded = 0
-    try:
-        os.mkdir("./Downloads")
-    except:
-        pass
-    try:
-        os.mkdir(folder_path)
-    except:
-        pass
-
-    files = os.listdir(folder_path)
-    for file in files:
-        os.remove(folder_path + file)
-
-
-def clearLine(n=1):
-    for i in range(n):
-        print("\033[1A\x1b[2K", end="")
-
-
-async def progress(TOTAL):
-    global chunksDownloaded, sizeDownloaded
-    x = 0
-    c = 0
-    t = 0
-
-    print("-" * 88)
-    print(
-        "|"
-        + "Chunks Downloaded".center(21)
-        + "|"
-        + "Chunks/sec".center(14)
-        + "|"
-        + "Size Downloaded".center(19)
-        + "|"
-        + "Speed".center(15)
-        + "|"
-        + "Time Left".center(13)
-        + "|"
-    )
-    print("-" * 88 + "\n\n")
-
-    while True:
-        if chunksDownloaded == TOTAL:
-            break
-
-        speed = round((sizeDownloaded - x) / (1024 * 1024 * 2), 2)  # per sec
-        speed2 = round((chunksDownloaded - c) / 2)  # per sec
-        if speed2 == 0:
-            speed2 = 1
-        time = round(((TOTAL - chunksDownloaded) / speed2) / 60, 2)  # in min
-        size = round(sizeDownloaded / (1024 * 1024))  # in MB
-
-        clearLine(2)
-        print(
-            "|"
-            + f"{chunksDownloaded}/{TOTAL}".center(21)
-            + "|"
-            + f"{speed2} Chunks".center(14)
-            + "|"
-            + f"{size} MB".center(19)
-            + "|"
-            + f"{speed} MB/s".center(15)
-            + "|"
-            + f"{time} min".center(13)
-            + "|"
-        )
-        print("-" * 88)
-        x = sizeDownloaded
-        c = chunksDownloaded
-
-        await asyncio.sleep(2)
-
-
-async def downloadChunks(pos, session: aiohttp.ClientSession, chunks):
-    global chunksDownloaded, sizeDownloaded
-
-    async with aiofiles.open(f"{folder_path}{pos}.ts", "ab") as f:
-        for i in chunks:
-            async with session.get(i) as response:
-                resp = await response.read()
-
-            await f.write(resp)
-
-            sizeDownloaded += len(resp)
-            chunksDownloaded += 1
+    vid = add_download(aria2,url)
+    return vid
