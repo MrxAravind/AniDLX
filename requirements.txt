@@ -1,4 +1,6 @@
 requests
 aiohttp
 aiofiles
-pypdl
+aria2p
+aria2
+pyrogram
