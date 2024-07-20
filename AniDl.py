@@ -131,7 +131,8 @@ while True:
 print("\n", "=" * 50)
 
 
-# Download
+@app.on_message(filters.command(["start"]) & filters.private)
+async def start_handler(c: Client, m: Message):
 async def StartDownload():
     resetCache()
     try:
