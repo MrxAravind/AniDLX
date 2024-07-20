@@ -1,3 +1,4 @@
+from pyrogram import Client, filters,enums
 import asyncio, aiohttp, os
 import aria2p
 from Utils.File import convertFilePath
@@ -6,6 +7,16 @@ from Utils.Downloader import startDownload, get_status
 from Utils.FFmpeg import ConvertTsToMp4
 
 TechZApi = TechZApi()
+
+
+app = Client(
+    name="AniDLX-bot",
+    api_hash=Config.API_HASH,
+    api_id=int(Config.TELEGRAM_API),
+    bot_token=Config.BOT_TOKEN,
+    workers=300
+)
+
 
 os.system("nohup aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all > aria2c.log 2>&1 &")
 
@@ -29,7 +40,7 @@ while True:
         continue
 
     try:
-        search = TechZApi.gogo_search(search.lower())
+        
     except Exception as e:
         print(">> Error: ", e)
         continue
@@ -69,9 +80,6 @@ while True:
 
 # Episodes
 
-title = anime.get("title")
-anime = TechZApi.gogo_anime(anime.get("id"))["results"]
-episodes = anime["episodes"]
 
 print("\n", "=" * 50)
 print("\n>> Select Episode\n", sep="")
@@ -99,53 +107,24 @@ while True:
         print(">> Invalid Choice")
         continue
 
-# Quality
-
-print("\n", "=" * 50, "\n\n>> Select Quality", sep="")
-
-print("1. 360p")
-print("2. 480p")
-print("3. 720p")
-print("4. 1080p")
-
-while True:
-    try:
-        select = int(input("Enter Your Choice (1,2,3...): "))
-
-        if select == 1:
-            quality = "360"
-        elif select == 2:
-            quality = "480"
-        elif select == 3:
-            quality = "720"
-        elif select == 4:
-            quality = "1080"
-        break
-    except KeyboardInterrupt:
-        print(">> Exiting...")
-        exit()
-    except:
-        print(">> Invalid Choice")
-        continue
-
-print("\n", "=" * 50)
 
 
 @app.on_message(filters.command(["start"]) & filters.private)
 async def start_handler(c: Client, m: Message):
+       search = TechZApi.gogo_search(search.lower())
+       title = anime.get("title")
+       anime = TechZApi.gogo_anime(anime.get("id"))["results"]
+       episodes = anime["episodes"]
+
+
+
+    
 async def StartDownload():
     resetCache()
     try:
         os.mkdir(convertFilePath(f"./Downloads/{anime.get('name')}"))
     except:
         pass
-    session = aiohttp.ClientSession()
-    print(
-        "\nEnter Number Of Workers To Parallel Download (Recommended: 4,8,16) - Depends On Your Internet Speed/PC Specs (CPU Cores)"
-    )
-    workers = int(input("\nNo. Of Workers: "))
-    print("\n>> Downloading Episodes")
-
     for ep in episodes:
         episode_id = ep[1]
         ep = ep[0]
