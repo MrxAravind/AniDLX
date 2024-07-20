@@ -48,7 +48,7 @@ def format_bytes(byte_count):
     return f"{byte_count:.2f} {suffixes[index]}"
 
 
-async def startDownload(aria2,url):
+def startDownload(aria2,url):
     print(">> Starting Download")
     vid = add_download(aria2,url)
     return vid
