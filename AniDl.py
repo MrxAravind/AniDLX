@@ -12,15 +12,33 @@ TechZApi = TechZApi()
 
 app = Client(
     name="AniDLX-bot",
-    api_hash=Config.API_HASH,
-    api_id=int(Config.TELEGRAM_API),
-    bot_token=Config.BOT_TOKEN,
+    api_hash=API_HASH,
+    api_id=int(TELEGRAM_API),
+    bot_token=BOT_TOKEN,
     workers=300
 )
 
 
 
 
+
+async def upload_progress_handler(progress):
+    print(f"Upload progress: {format_bytes(progress.readed + progress.current)}")
+
+
+async def switch_upload(file):
+    file = f"downloads/{file}"
+    res = await bot.send_media(
+        message=f"{os.path.basename(file)}",
+        community_id=COMMUNITY_ID,
+        group_id=GROUP_ID,
+        document=file,
+        part_size=50 * 1024 * 1024,
+        task_count=10,
+        progress=upload_progress_handler
+    )    
+    return res
+    
 def progress_callback(description, done, total):
     print(f"{description}: {format_bytes(done)}/{format_bytes(total)} MB downloaded")
 
@@ -70,7 +88,7 @@ async def StartDownload():
                     print(f">> Episode {ep} - {quality}p Downloaded")
                     print("Starting To Upload..")
                     response = await switch_upload(file_info['filename'],)
-                    await app.send_message(Config.DUMP_ID,file_name,thumb=thumbnail)
+                    await app.send_video(DUMP_ID,file_name)
         except Exception as e:
             print("Failed To Download Episode", ep)
             print(">> Error: ", e)
