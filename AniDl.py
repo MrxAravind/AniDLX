@@ -65,20 +65,22 @@ def get_anime():
 async def StartDownload():
  async with app:
     anime = get_anime()
+    print(f"Selected Anime : {anime}")
     anime = TechZApi.gogo_anime(anime)["results"]
     title = anime.get("title")
     episodes = anime["episodes"]
+    print(f"Total No.OF Episodes: {len(episodes)}")
     for ep in episodes:
         episode_id = ep[1]
         ep = ep[0]
         try:
             anime['name'] = anime['name'].replace("/", " ").replace("\\",' ')
-            print(f"\n\n>> Downloading Episode {ep} - {quality}p")
             data = TechZApi.gogo_download(episode_id)["results"]
             url = [ [ i,data[i]] for i in data ]
             file_path = f"{anime.get('name')} - Episode {ep} - {url[-1][0]}p.mp4"
+            print(f"\n\n>> Downloading Episode {ep} - {url[-1][0]}p")
             downloader = TechZDL(
-                              url=video_url,
+                              url=url[-1][1],
                               debug=False,
                               file_name=file_path,
                               progress=False,
