@@ -19,6 +19,8 @@ app = Client(
     workers=300
 )
 
+#Switch
+bot = BotApp(TOKEN)
 
 
 
