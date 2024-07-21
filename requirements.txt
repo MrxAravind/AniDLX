@@ -1,7 +1,7 @@
 requests
 aiohttp
 aiofiles
-pyrogram
+git+https://github.com/Hrishi2861/pyrofork-2.2.11-peer-fix.git
 techzdl
 python-dotenv
 swibots
