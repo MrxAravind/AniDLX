@@ -100,7 +100,7 @@ async def StartDownload():
             file_info = await downloader.get_file_info()
             print(f"Filename: {file_info['filename']}")
             if downloader.download_success:
-                    print(f">> Episode {ep} - {quality}p Downloaded")
+                    print(f">> Episode {ep} - {url[-1][0]}p Downloaded")
                     print("Starting To Upload..")
                     response = await switch_upload(file_info['filename'],)
                     await app.send_video(DUMP_ID,file_name)
