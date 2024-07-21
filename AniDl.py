@@ -33,7 +33,9 @@ def format_bytes(byte_count):
         index += 1
     return f"{byte_count:.2f} {suffixes[index]}"
 
-
+async def progress(current, total):
+    print(f"{current * 100 / total:.1f}%")
+    
 
 async def upload_progress_handler(progress):
     print(f"Upload progress: {format_bytes(progress.readed + progress.current)}")
@@ -103,7 +105,7 @@ async def StartDownload():
                     print(f">> Episode {ep} - {url[-1][0]}p Downloaded")
                     print("Starting To Upload..")
                     response = await switch_upload(file_path,)
-                    await app.send_video(DUMP_ID,f"downloads/{file_path}",caption=f"[Direct Link]({response.media_link})")
+                    await app.send_video(DUMP_ID,f"downloads/{file_path}",caption=f"[Direct Link]({response.media_link})",progress=progress)
         except Exception as e:
             print("Failed To Download Episode", ep)
             print(">> Error: ", e)
