@@ -2,5 +2,6 @@ requests
 aiohttp
 aiofiles
 aria2p
-aria2
 pyrogram
+techzdl
+python-dotenv
