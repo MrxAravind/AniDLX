@@ -80,8 +80,11 @@ async def StartDownload():
     print(f"Selected Anime : {anime}")
     anime = TechZApi.gogo_anime(anime)["results"]
     title = anime.get("title")
+    image = anime.get("image")
     episodes = anime["episodes"]
     print(f"Total No.OF Episodes: {len(episodes)}")
+    image_downloader = TechZDL(url=image,progress=False,debug=False).start()
+    thumb_path = await image_downloader.get_file_info()['filename']
     for ep in episodes:
         episode_id = ep[1]
         ep = ep[0]
@@ -105,7 +108,7 @@ async def StartDownload():
                     print(f">> Episode {ep} - {url[-1][0]}p Downloaded")
                     print("Starting To Upload..")
                     response = await switch_upload(file_path,)
-                    await app.send_video(DUMP_ID,f"downloads/{file_path}",caption=f"[Direct Link]({response.media_link})",progress=progress)
+                    await app.send_video(DUMP_ID,f"downloads/{file_path}",caption=f"[Direct Link]({response.media_link})",thumb=thumb_path,progress=progress)
         except Exception as e:
             print("Failed To Download Episode", ep)
             print(">> Error: ", e)
