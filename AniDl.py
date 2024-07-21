@@ -14,7 +14,7 @@ TechZApi = TechZApi()
 app = Client(
     name="AniDLX-bot",
     api_hash=API_HASH,
-    api_id=int(TELEGRAM_API),
+    api_id=int(API_ID),
     bot_token=BOT_TOKEN,
     workers=300
 )
