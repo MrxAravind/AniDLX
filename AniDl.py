@@ -83,7 +83,8 @@ async def StartDownload():
     image = anime.get("image")
     episodes = anime["episodes"]
     print(f"Total No.OF Episodes: {len(episodes)}")
-    image_downloader = await TechZDL(url=image,progress=False,debug=False).start()
+    image_downloader = TechZDL(url=image,progress=False,debug=False)
+    await image_downloader.start()
     thumb_path = await image_downloader.get_file_info()['filename']
     for ep in episodes:
         episode_id = ep[1]
