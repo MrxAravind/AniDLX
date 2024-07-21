@@ -80,12 +80,13 @@ async def StartDownload():
     print(f"Selected Anime : {anime}")
     anime = TechZApi.gogo_anime(anime)["results"]
     title = anime.get("title")
-    image = anime.get("image")
+    image_url = anime.get("image")
     episodes = anime["episodes"]
     print(f"Total No.OF Episodes: {len(episodes)}")
-    image_downloader = TechZDL(url=image,progress=False,debug=False)
+    image_downloader = TechZDL(url=image_url,progress=False,debug=False)
     await image_downloader.start()
-    thumb_path = await image_downloader.get_file_info()['filename']
+    img = await image_downloader.get_file_info()
+    thumb_path = img['filename']
     for ep in episodes:
         episode_id = ep[1]
         ep = ep[0]
