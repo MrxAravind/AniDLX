@@ -5,3 +5,4 @@ pyrogram
 techzdl
 python-dotenv
 swibots
+TgCrypto
