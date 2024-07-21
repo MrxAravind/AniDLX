@@ -25,6 +25,15 @@ bot = BotApp(TOKEN)
 
 
 
+def format_bytes(byte_count):
+    suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+    index = 0
+    while byte_count >= 1024 and index < len(suffixes) - 1:
+        byte_count /= 1024
+        index += 1
+    return f"{byte_count:.2f} {suffixes[index]}"
+
+
 
 async def upload_progress_handler(progress):
     print(f"Upload progress: {format_bytes(progress.readed + progress.current)}")
