@@ -102,8 +102,8 @@ async def StartDownload():
             if downloader.download_success:
                     print(f">> Episode {ep} - {url[-1][0]}p Downloaded")
                     print("Starting To Upload..")
-                    response = await switch_upload(file_info['filename'],)
-                    await app.send_video(DUMP_ID,file_name)
+                    response = await switch_upload(file_path,)
+                    await app.send_video(DUMP_ID,file_path)
         except Exception as e:
             print("Failed To Download Episode", ep)
             print(">> Error: ", e)
