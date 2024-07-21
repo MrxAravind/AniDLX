@@ -103,7 +103,7 @@ async def StartDownload():
                     print(f">> Episode {ep} - {url[-1][0]}p Downloaded")
                     print("Starting To Upload..")
                     response = await switch_upload(file_path,)
-                    await app.send_video(DUMP_ID,file_path)
+                    await app.send_video(DUMP_ID,f"downloads/{file_path}",caption=f"[Direct Link]({response.media_link})")
         except Exception as e:
             print("Failed To Download Episode", ep)
             print(">> Error: ", e)
