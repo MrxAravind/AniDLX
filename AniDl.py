@@ -83,7 +83,7 @@ async def StartDownload():
             downloader = TechZDL(
                               url=url[-1][1],
                               debug=False,
-                              file_name=file_path,
+                              filename=file_path,
                               progress=False,
                               progress_callback=progress_callback,
                               progress_interval=2,)
