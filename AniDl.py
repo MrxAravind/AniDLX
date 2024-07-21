@@ -1,10 +1,11 @@
 from pyrogram import Client, filters,enums
 import asyncio, aiohttp, os
-import aria2p
 from Utils.File import convertFilePath
 from Utils.TechZApi import TechZApi
 from Utils.Downloader import startDownload, get_status
 from Utils.FFmpeg import ConvertTsToMp4
+from techzdl import TechZDL
+
 
 TechZApi = TechZApi()
 
@@ -18,16 +19,10 @@ app = Client(
 )
 
 
-os.system("nohup aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all > aria2c.log 2>&1 &")
 
-aria2 = aria2p.API(
-    aria2p.Client(
-        host="http://localhost",
-        port=6800,
-        secret=""
-    )
-)
 
+def progress_callback(description, done, total):
+    print(f"{description}: {format_bytes(done)}/{format_bytes(total)} MB downloaded")
 
 
 
@@ -40,7 +35,11 @@ def get_anime():
                 writer.write(f"{i}\n")
      return animes[0]
     
-    
+
+
+
+
+
     
 async def StartDownload():
  async with app:
@@ -57,16 +56,21 @@ async def StartDownload():
             data = TechZApi.gogo_download(episode_id)["results"]
             url = [ [ i,data[i]] for i in data ]
             file_path = f"{anime.get('name')} - Episode {ep} - {url[-1][0]}p.mp4"
-            vid = startDownload(aria2,url[-1][-1])
-            vstatus = get_status(aria2,vid.gid)
-            file_name = vstatus['file_name']
-            while True:
-               if vstatus['is_complete']:
-                        #os.system(f"ffmpeg -i {status['file_name']} ss.jpg") thumbnail if uploading to tg
-                        print(f">> Episode {ep} - {quality}p Downloaded")
-                        os.rename(file_name,f"{anime.get('name')} - Episode {ep} - {url[-1][0]}p.mp4")
-                        await app.send_message(Config.DUMP_ID,file_name,thumb=thumbnail)
-            
+            downloader = TechZDL(
+                              url=video_url,
+                              debug=False,
+                              file_name=file_path,
+                              progress=False,
+                              progress_callback=progress_callback,
+                              progress_interval=2,)
+            await downloader.start()
+            file_info = await downloader.get_file_info()
+            print(f"Filename: {file_info['filename']}")
+            if downloader.download_success:
+                    print(f">> Episode {ep} - {quality}p Downloaded")
+                    print("Starting To Upload..")
+                    response = await switch_upload(file_info['filename'],)
+                    await app.send_message(Config.DUMP_ID,file_name,thumb=thumbnail)
         except Exception as e:
             print("Failed To Download Episode", ep)
             print(">> Error: ", e)
