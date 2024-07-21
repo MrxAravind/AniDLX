@@ -1,7 +1,7 @@
 requests
 aiohttp
 aiofiles
-aria2p
 pyrogram
 techzdl
 python-dotenv
+swibots
