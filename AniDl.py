@@ -5,6 +5,7 @@ from Utils.TechZApi import TechZApi
 from Utils.Downloader import startDownload, get_status
 from Utils.FFmpeg import ConvertTsToMp4
 from techzdl import TechZDL
+from config import *
 
 
 TechZApi = TechZApi()
