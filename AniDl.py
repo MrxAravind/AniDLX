@@ -6,7 +6,6 @@ from Utils.Downloader import startDownload, get_status
 from Utils.FFmpeg import ConvertTsToMp4
 from techzdl import TechZDL
 from config import *
-from swibots import BotApp
 import static_ffmpeg
 
 
@@ -27,7 +26,7 @@ app = Client(
 )
 
 #Switch
-bot = BotApp(TOKEN)
+#bot = BotApp(TOKEN)
 
 
 
@@ -120,8 +119,8 @@ async def StartDownload():
             if downloader.download_success:
                     print(f">> Episode {ep} - {url[-2][0]}p Downloaded")
                     print("Starting To Upload..")
-                    response = await switch_upload(file_path,)
-                    await app.send_document(DUMP_ID,f"downloads/{file_path}",caption=f"[Direct Link]({response.media_link})",thumb=f"downloads/{thumb_path}",progress=progress)
+                    #response = await switch_upload(file_path,) caption=f"[Direct Link]({response.media_link})",
+                    await app.send_document(DUMP_ID,f"downloads/{file_path}",thumb=f"downloads/{thumb_path}",progress=progress)
             uploadedeps +=1
             status = await status.edit_text(f"{status.text}\nSelected Anime :{anime}\nTotal Eps:{len(episodes)}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading")
         except Exception as e:
