@@ -81,7 +81,7 @@ def get_anime():
     
 async def StartDownload():
  async with app:
-    status = await send_message(LOG_ID,"Bot Started")
+    status = await app.send_message(LOG_ID,"Bot Started")
     anime = get_anime()
     print(f"Selected Anime : {anime}")
     status = await status.edit_text(f"{status.text}\nSelected Anime : {anime}")
