@@ -88,7 +88,7 @@ async def StartDownload():
     status = await app.send_message(LOG_ID,"Bot Started")
     anime = get_anime()
     anime = TechZApi.gogo_anime(anime)["results"]
-    title = anime.get("title")
+    title = anime.get("name")
     print(f"Selected Anime : {title}")
     status = await status.edit_text(f"{status.text}\nSelected Anime : {title}")
     image_url = anime.get("image")
