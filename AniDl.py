@@ -7,6 +7,12 @@ from Utils.FFmpeg import ConvertTsToMp4
 from techzdl import TechZDL
 from config import *
 from swibots import BotApp
+import static_ffmpeg
+
+
+
+# ffmpeg installed on first call to add_paths()
+static_ffmpeg.add_paths()  
 
 
 TechZApi = TechZApi()
@@ -76,17 +82,22 @@ def get_anime():
     
 async def StartDownload():
  async with app:
+    status = await send_message(LOG_ID,"Bot Started")
     anime = get_anime()
     print(f"Selected Anime : {anime}")
+    status = await status.edit_text(f"{status.text}\nSelected Anime : {anime}")
     anime = TechZApi.gogo_anime(anime)["results"]
     title = anime.get("title")
     image_url = anime.get("image")
     episodes = anime["episodes"]
     print(f"Total No.OF Episodes: {len(episodes)}")
+    status = await status.edit_text(f"{status.text}\nSelected Anime :{anime}\nTotal Eps:{len(episodes)}")
     image_downloader = TechZDL(url=image_url,progress=False,debug=False)
     await image_downloader.start()
     img = await image_downloader.get_file_info()
     thumb_path = img['filename']
+    uploadedeps = 0
+    status = await status.edit_text(f"{status.text}\nSelected Anime :{anime}\nTotal Eps:{len(episodes)}\nStatus:Downloading")
     for ep in episodes:
         episode_id = ep[1]
         ep = ep[0]
@@ -111,10 +122,13 @@ async def StartDownload():
                     print("Starting To Upload..")
                     response = await switch_upload(file_path,)
                     await app.send_document(DUMP_ID,f"downloads/{file_path}",caption=f"[Direct Link]({response.media_link})",thumb=f"downloads/{thumb_path}",progress=progress)
+            uploadedeps +=1
+            status = await status.edit_text(f"{status.text}\nSelected Anime :{anime}\nTotal Eps:{len(episodes)}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading")
         except Exception as e:
             print("Failed To Download Episode", ep)
             print(">> Error: ", e)
+            status = await status.edit_text(f"{status.text}\nSelected Anime :{anime}\nTotal Eps:{len(episodes)}\nDownloaded Eps:{uploadedeps}\nStatus:Error")
             continue
-
-
+    if len(episodes) == uploadedeps:
+         status = await status.edit_text(f"{status.text}\nSelected Anime :{anime}\nTotal Eps:{len(episodes)}\nDownloaded Eps:{uploadedeps}\nStatus:Finished")
 app.run(StartDownload())
