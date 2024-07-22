@@ -7,6 +7,7 @@ from Utils.FFmpeg import ConvertTsToMp4
 from techzdl import TechZDL
 from config import *
 import static_ffmpeg
+import time
 
 
 
@@ -38,9 +39,13 @@ def format_bytes(byte_count):
         index += 1
     return f"{byte_count:.2f} {suffixes[index]}"
 
-async def progress(current, total):
-    print(f"{current * 100 / total:.1f}%")
-    
+async def progress(current, total,status,uploadedeps,start_time):
+    per = f"{current * 100 / total:.1f}%"
+    current_time = time.time()
+    elapsed_time = current_time - start_time
+    if elapsed_time >= 2:
+        await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading\nDLProgress:{format_bytes(current)} / {format_bytes(total)} [{per}]")
+        start_time = current_time
 
 async def upload_progress_handler(progress):
     print(f"Upload progress: {format_bytes(progress.readed + progress.current)}")
@@ -60,9 +65,7 @@ async def switch_upload(file):
     return res
     
 async def progress_callback(description, done, total,status,uploadedeps):
-    await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading\nDLProgress:{format_bytes(done)}MB / {format_bytes(total)} MB")
-    print(f"{description}: {format_bytes(done)}/{format_bytes(total)} MB downloaded")
-
+    await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading\nDLProgress:{format_bytes(done)} / {format_bytes(total)}")
 
 
 def get_anime():
@@ -121,8 +124,10 @@ async def StartDownload():
             if downloader.download_success:
                     print(f">> Episode {ep} - {url[-2][0]}p Downloaded")
                     print("Starting To Upload..")
+                    start_time = time.time()
+                    await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Uploading")
                     #response = await switch_upload(file_path,) caption=f"[Direct Link]({response.media_link})",
-                    await app.send_document(DUMP_ID,f"downloads/{file_path}",thumb=f"downloads/{thumb_path}")
+                    await app.send_document(DUMP_ID,f"downloads/{file_path}",thumb=f"downloads/{thumb_path}",progress=progress,progress_args=(status,uploadedeps,start_time))
             uploadedeps +=1
             await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading")
         except Exception as e:
