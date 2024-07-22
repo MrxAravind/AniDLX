@@ -97,8 +97,8 @@ async def StartDownload():
     anime = get_anime()
     anime = TechZApi.gogo_anime(anime)["results"]
     title = anime.get("name")
-    print(f"Anime : {title}")
-    status = await status.edit_text(f"{status.text}\nSelected Anime : {title}")
+    print(f"Selected Anime : {title}")
+    status = await status.edit_text(f"{status.text}\n Anime : {title}")
     image_url = anime.get("image")
     episodes = anime["episodes"]
     print(f"Total No.OF Episodes: {len(episodes)}")
