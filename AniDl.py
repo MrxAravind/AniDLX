@@ -133,8 +133,8 @@ async def StartDownload():
         except Exception as e:
             print("Failed To Download Episode", ep)
             print(">> Error: ", e)
-            status = await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Error")
+            await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Error")
             continue
     if len(episodes) == uploadedeps:
-         status = await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Finished")
+         await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Finished")
 app.run(StartDownload())
