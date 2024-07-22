@@ -1,3 +1,4 @@
+static-ffmpeg
 requests
 aiohttp
 aiofiles
@@ -6,3 +7,4 @@ techzdl
 python-dotenv
 swibots
 TgCrypto
+flask
