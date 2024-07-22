@@ -40,20 +40,14 @@ def format_bytes(byte_count):
     return f"{byte_count:.2f} {suffixes[index]}"
 
 
-def status_progress(start):
-    global start_time
-    current_time = time.time()
-    elapsed_time = current_time - start
-    if elapsed_time >= 4:
-        start_time = current_time
-    return True
-
 
 async def progress(current, total,status,uploadedeps,start):
-    per = f"{current * 100 / total:.1f}%"
-    st = status_progress(start)
-    if st:
-          await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading\nUPProgress:{format_bytes(current)} / {format_bytes(total)} [{per}]")
+     current_time = time.time()
+     diff = current_time - start
+     if round(diff % 10.00) == 0 or current == total:
+         per = f"{current * 100 / total:.1f}%"
+         start_time = current_time
+         await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading\nUPProgress:{format_bytes(current)} / {format_bytes(total)} [{per}]")
         
 async def upload_progress_handler(progress):
     print(f"Upload progress: {format_bytes(progress.readed + progress.current)}")
