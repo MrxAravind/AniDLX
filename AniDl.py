@@ -59,7 +59,7 @@ async def switch_upload(file):
     )    
     return res
     
-def progress_callback(description, done, total,status,uploadedeps):
+async def progress_callback(description, done, total,status,uploadedeps):
     await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading\nDLProgress:{format_bytes(done)}MB / {format_bytes(total)} MB")
     print(f"{description}: {format_bytes(done)}/{format_bytes(total)} MB downloaded")
 
