@@ -11,7 +11,7 @@ import static_ffmpeg
 
 
 # ffmpeg installed on first call to add_paths()
-static_ffmpeg.add_paths()  
+#static_ffmpeg.add_paths()  
 
 
 TechZApi = TechZApi()
@@ -59,7 +59,8 @@ async def switch_upload(file):
     )    
     return res
     
-def progress_callback(description, done, total):
+def progress_callback(description, done, total,status,uploadedeps):
+    await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading\nDLProgress:{format_bytes(done)}MB / {format_bytes(total)} MB")
     print(f"{description}: {format_bytes(done)}/{format_bytes(total)} MB downloaded")
 
 
@@ -112,6 +113,7 @@ async def StartDownload():
                               filename=file_path,
                               progress=False,
                               progress_callback=progress_callback,
+                              progress_args=(status,uploadedeps),
                               progress_interval=2,)
             await downloader.start()
             file_info = await downloader.get_file_info()
@@ -120,9 +122,9 @@ async def StartDownload():
                     print(f">> Episode {ep} - {url[-2][0]}p Downloaded")
                     print("Starting To Upload..")
                     #response = await switch_upload(file_path,) caption=f"[Direct Link]({response.media_link})",
-                    await app.send_document(DUMP_ID,f"downloads/{file_path}",thumb=f"downloads/{thumb_path}",progress=progress)
+                    await app.send_document(DUMP_ID,f"downloads/{file_path}",thumb=f"downloads/{thumb_path}")
             uploadedeps +=1
-            status = await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading")
+            await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading")
         except Exception as e:
             print("Failed To Download Episode", ep)
             print(">> Error: ", e)
