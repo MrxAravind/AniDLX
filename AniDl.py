@@ -43,7 +43,7 @@ async def progress(current, total,status,uploadedeps,start_time):
     per = f"{current * 100 / total:.1f}%"
     current_time = time.time()
     elapsed_time = current_time - start_time
-    if elapsed_time >= 2:
+    if elapsed_time >= 4:
         await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading\nDLProgress:{format_bytes(current)} / {format_bytes(total)} [{per}]")
         start_time = current_time
 
