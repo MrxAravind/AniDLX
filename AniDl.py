@@ -44,7 +44,8 @@ def format_bytes(byte_count):
 async def progress(current, total,status,uploadedeps,start):
      current_time = time.time()
      diff = current_time - start
-     if round(diff % 5.00) == 0 or current == total:
+     #if round(diff % 5.00) == 0 or current == total:
+     if round(current / total * 100, 0) % 5 == 0:
          per = f"{current * 100 / total:.1f}%"
          start_time = current_time
          await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading\nUPProgress:{format_bytes(current)} / {format_bytes(total)} [{per}]")
@@ -92,7 +93,7 @@ async def StartDownload():
     anime = TechZApi.gogo_anime(anime)["results"]
     title = anime.get("name")
     print(f"Selected Anime : {title}")
-    status = await status.edit_text(f"{status.text}\n Anime : {title}")
+    status = await status.edit_text(f"{status.text}\nAnime : {title}")
     image_url = anime.get("image")
     episodes = anime["episodes"]
     print(f"Total No.OF Episodes: {len(episodes)}")
@@ -130,6 +131,8 @@ async def StartDownload():
                     await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Uploading")
                     #response = await switch_upload(file_path,) caption=f"[Direct Link]({response.media_link})",
                     await app.send_document(DUMP_ID,f"downloads/{file_path}",thumb=f"downloads/{thumb_path}",progress=progress,progress_args=(status,uploadedeps,start_time))
+                    print("Upload Finished...")
+                    
             uploadedeps +=1
             await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading")
         except Exception as e:
