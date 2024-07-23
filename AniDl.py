@@ -162,6 +162,7 @@ async def StartDownload():
             print("Failed To Download Episode", ep)
             print(">> Error: ", e)
             await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Error")
+            await status.delete()
             continue
     if len(episodes) == uploadedeps:
          await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Finished")
