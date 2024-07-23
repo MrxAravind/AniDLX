@@ -91,7 +91,7 @@ async def StartDownload():
   while True:
     anime = get_anime()
     if len(anime) ==0:
-        await app.send_message(LOG_ID,"Ran of Animes\nUpdate the List\nASAP")
+        await app.send_message(LOG_ID,"Ran out of Animes\nUpdate the List\nASAP")
     status = await app.send_message(LOG_ID,"Bot Started")
     anime = TechZApi.gogo_anime(anime)["results"]
     title = anime.get("name")
