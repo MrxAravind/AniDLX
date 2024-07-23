@@ -109,11 +109,11 @@ async def start_download():
                 episode_id = ep[1]
                 ep = ep[0]
                 try:
-                    anime_info['name'] = anime['name'].replace("/", " ").replace("\\", ' ')
+                    anime_info['name'] = anime_info['name'].replace("/", " ").replace("\\", ' ')
                     data = TechZApi.gogo_download(episode_id)["results"]
                     episode_list = [[i, data[i]] for i in data]
                     for quality, url in episode_list:
-                        file_path = f"{anime.get('name')} - Episode {ep} - {quality}p.mp4"
+                        file_path = f"{anime_info.get('name')} - Episode {ep} - {quality}p.mp4"
                         logger.info(f">> Downloading Episode {ep} - {quality}p")
                         downloader = TechZDL(url=url,debug=False,filename=file_path,progress=False,progress_callback=progress_callback,progress_args=(status, uploadedeps),progress_interval=2)
                         await downloader.start()
