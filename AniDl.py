@@ -89,6 +89,7 @@ async def start_download():
                 await asyncio.sleep(3800)
                 continue
             anime = anime[0]
+            anime_start_time = time.time()                           
             status = await app.send_message(LOG_ID, "Bot Started")
             anime_info = TechZApi.gogo_anime(anime)["results"]
             title = anime_info.get("name")
@@ -112,22 +113,14 @@ async def start_download():
                     data = TechZApi.gogo_download(episode_id)["results"]
                     episode_list = [[i, data[i]] for i in data]
                     for quality, url in episode_list:
-                        file_path = f"{anime.get('name')} - Episode {ep} - {url[-2][0]}p.mp4"
-                        logger.info(f">> Downloading Episode {ep} - {url[-2][0]}p")
-                        downloader = TechZDL(
-                            url=url[-1][1],
-                            debug=False,
-                            filename=file_path,
-                            progress=False,
-                            progress_callback=progress_callback,
-                            progress_args=(status, uploadedeps),
-                            progress_interval=2
-                        )
+                        file_path = f"{anime.get('name')} - Episode {ep} - {quality}p.mp4"
+                        logger.info(f">> Downloading Episode {ep} - {quality}p")
+                        downloader = TechZDL(url=url,debug=False,filename=file_path,progress=False,progress_callback=progress_callback,progress_args=(status, uploadedeps),progress_interval=2)
                         await downloader.start()
                         file_info = await downloader.get_file_info()
                         logger.info(f"Filename: {file_info['filename']}")
                         if downloader.download_success:
-                            logger.info(f">> Episode {ep} - {url[-2][0]}p Downloaded")
+                            logger.info(f">> Episode {ep} - {quality}p Downloaded")
                             logger.info("Starting To Upload..")
                             start_time = time.time()
                             await status.edit_text(f"{status.text}\nDownloaded Eps: {uploadedeps}\nStatus: Uploading")
@@ -141,7 +134,7 @@ async def start_download():
                     await status.edit_text(f"{status.text}\nDownloaded Eps: {uploadedeps}\nStatus: Error")
                     continue
             if len(episodes) == uploadedeps:
-                await status.edit_text(f"{status.text}\nDownloaded Eps: {uploadedeps}\nStatus: Finished")
+                await status.edit_text(f"{status.text}\nDownloaded Eps: {uploadedeps}\nStart_Time:{anime_start_time}\nStatus: Finished")
             await asyncio.sleep(120)
 
 
