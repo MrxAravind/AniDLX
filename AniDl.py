@@ -44,8 +44,8 @@ def format_bytes(byte_count):
 async def progress(current, total,status,uploadedeps,start):
      current_time = time.time()
      diff = current_time - start
-     #if round(diff % 5.00) == 0 or current == total:
-     if round(current / total * 100, 0) % 5 == 0:
+     if round(diff % 5.00) == 0 or current == total:
+     #if round(current / total * 100, 0) % 5 == 0:
          per = f"{current * 100 / total:.1f}%"
          start_time = current_time
          await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading\nUPProgress:{format_bytes(current)} / {format_bytes(total)} [{per}]")
@@ -78,7 +78,7 @@ def get_anime():
           for i in animes:
              if i != animes[0]:
                 writer.write(f"{i}\n")
-     return animes[0]
+     return animes
     
 
 
@@ -88,8 +88,11 @@ def get_anime():
     
 async def StartDownload():
  async with app:
-    status = await app.send_message(LOG_ID,"Bot Started")
+  while True:
     anime = get_anime()
+    if len(anime) ==0:
+        await app.send_message(LOG_ID,"Ran of Animes\nUpdate the List\nASAP")
+    status = await app.send_message(LOG_ID,"Bot Started")
     anime = TechZApi.gogo_anime(anime)["results"]
     title = anime.get("name")
     print(f"Selected Anime : {title}")
@@ -142,4 +145,5 @@ async def StartDownload():
             continue
     if len(episodes) == uploadedeps:
          await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Finished")
+    asyncio.sleep(30)
 app.run(StartDownload())
