@@ -138,7 +138,7 @@ async def StartDownload():
                               progress=False,
                               progress_callback=progress_callback,
                               progress_args=(status,uploadedeps),
-                              progress_interval=2,)
+                              progress_interval=4,)
                  await downloader.start()
                  file_info = await downloader.get_file_info()
                  print(f"Filename: {file_info['filename']}")
