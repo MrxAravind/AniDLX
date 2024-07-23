@@ -76,7 +76,7 @@ async def switch_upload(file):
 async def progress_callback(description, done, total,status,uploadedeps,start):
      current_time = time.time()
      diff = current_time - start
-     if round(diff % 10.00) == 0 or done == total:
+     if round(diff % 10.00) == 0:
         text = f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading\nDLProgress:{format_bytes(done)} / {format_bytes(total)}"
         await status.edit_text(text)
 
