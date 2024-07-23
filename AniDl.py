@@ -49,7 +49,8 @@ async def progress(current, total,status,uploadedeps,start):
          per = f"{current * 100 / total:.1f}%"
          start_time = current_time
          await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading\nUPProgress:{format_bytes(current)} / {format_bytes(total)} [{per}]")
-        
+
+
 async def upload_progress_handler(progress):
     print(f"Upload progress: {format_bytes(progress.readed + progress.current)}")
 
@@ -66,9 +67,13 @@ async def switch_upload(file):
         progress=upload_progress_handler
     )    
     return res
-    
+
+
+
 async def progress_callback(description, done, total,status,uploadedeps):
     await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading\nDLProgress:{format_bytes(done)} / {format_bytes(total)}")
+
+
 
 
 def get_anime():
@@ -93,7 +98,7 @@ async def StartDownload():
     print(anime)
     if len(anime) == 0:
         await app.send_message(LOG_ID,"Ran out of Animes\nUpdate the List\nASAP")
-        await asyncio.sleep(50000)
+        await asyncio.sleep(3800)
     anime = anime[0]
     status = await app.send_message(LOG_ID,"Bot Started")
     anime = TechZApi.gogo_anime(anime)["results"]
@@ -120,7 +125,7 @@ async def StartDownload():
             file_path = f"{anime.get('name')} - Episode {ep} - {url[-2][0]}p.mp4"
             print(f"\n\n>> Downloading Episode {ep} - {url[-2][0]}p")
             downloader = TechZDL(
-                              url=url[-2][1],
+                              url=url[-1][1],
                               debug=False,
                               filename=file_path,
                               progress=False,
