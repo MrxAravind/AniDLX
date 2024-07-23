@@ -144,9 +144,8 @@ async def StartDownload():
                     #response = await switch_upload(file_path,) caption=f"[Direct Link]({response.media_link})",
                     await app.send_document(DUMP_ID,f"downloads/{file_path}",thumb=f"downloads/{thumb_path}",progress=progress,progress_args=(status,uploadedeps,start_time))
                     print("Upload Finished...")
-                    
-                 uploadedeps +=1
-                 await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading")
+                    uploadedeps +=1
+                    await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading")
         except Exception as e:
             print("Failed To Download Episode", ep)
             print(">> Error: ", e)
