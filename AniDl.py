@@ -121,10 +121,11 @@ async def StartDownload():
         try:
             anime['name'] = anime['name'].replace("/", " ").replace("\\",' ')
             data = TechZApi.gogo_download(episode_id)["results"]
-            url = [ [ i,data[i]] for i in data ]
-            file_path = f"{anime.get('name')} - Episode {ep} - {url[-2][0]}p.mp4"
-            print(f"\n\n>> Downloading Episode {ep} - {url[-2][0]}p")
-            downloader = TechZDL(
+            episode_list = [ [ i,data[i]] for i in data ]
+            for quality,url  in episode_list:
+                 file_path = f"{anime.get('name')} - Episode {ep} - {url[-2][0]}p.mp4"
+                 print(f"\n\n>> Downloading Episode {ep} - {url[-2][0]}p")
+                 downloader = TechZDL(
                               url=url[-1][1],
                               debug=False,
                               filename=file_path,
@@ -132,10 +133,10 @@ async def StartDownload():
                               progress_callback=progress_callback,
                               progress_args=(status,uploadedeps),
                               progress_interval=2,)
-            await downloader.start()
-            file_info = await downloader.get_file_info()
-            print(f"Filename: {file_info['filename']}")
-            if downloader.download_success:
+                 await downloader.start()
+                 file_info = await downloader.get_file_info()
+                 print(f"Filename: {file_info['filename']}")
+                 if downloader.download_success:
                     print(f">> Episode {ep} - {url[-2][0]}p Downloaded")
                     print("Starting To Upload..")
                     start_time = time.time()
@@ -144,8 +145,8 @@ async def StartDownload():
                     await app.send_document(DUMP_ID,f"downloads/{file_path}",thumb=f"downloads/{thumb_path}",progress=progress,progress_args=(status,uploadedeps,start_time))
                     print("Upload Finished...")
                     
-            uploadedeps +=1
-            await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading")
+                 uploadedeps +=1
+                 await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading")
         except Exception as e:
             print("Failed To Download Episode", ep)
             print(">> Error: ", e)
