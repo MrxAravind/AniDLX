@@ -93,7 +93,7 @@ async def StartDownload():
     print(anime)
     if len(anime) == 0:
         await app.send_message(LOG_ID,"Ran out of Animes\nUpdate the List\nASAP")
-        asyncio.sleep(50000)
+        await asyncio.sleep(50000)
     anime = anime[0]
     status = await app.send_message(LOG_ID,"Bot Started")
     anime = TechZApi.gogo_anime(anime)["results"]
@@ -148,7 +148,7 @@ async def StartDownload():
             continue
     if len(episodes) == uploadedeps:
          await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Finished")
-    asyncio.sleep(120)
+    await asyncio.sleep(120)
 
 
 app.run(StartDownload())
