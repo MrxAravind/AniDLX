@@ -44,7 +44,7 @@ def format_bytes(byte_count):
 async def progress(current, total,status,uploadedeps,start):
      current_time = time.time()
      diff = current_time - start
-     if round(diff % 5.00) == 0 or current == total:
+     if round(diff % 10.00) == 0 or current == total:
      #if round(current / total * 100, 0) % 5 == 0:
          per = f"{current * 100 / total:.1f}%"
          start_time = current_time
