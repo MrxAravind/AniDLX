@@ -127,6 +127,7 @@ async def StartDownload():
             anime['name'] = anime['name'].replace("/", " ").replace("\\",' ')
             data = TechZApi.gogo_download(episode_id)["results"]
             episode_list = [ [ i,data[i]] for i in data ]
+            files = []
             for quality,url  in episode_list:
                  file_path = f"{anime.get('name')} - Episode {ep} - {quality}p.mp4"
                  print(f"\n\n>> Downloading Episode {ep} - {quality}p")
@@ -143,14 +144,17 @@ async def StartDownload():
                  print(f"Filename: {file_info['filename']}")
                  if downloader.download_success:
                     print(f">> Episode {ep} - {quality}p Downloaded")
-                    print("Starting To Upload..")
-                    start_time = time.time()
-                    await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Uploading")
+                    files.append(InputMediaDocument(media=f"downloads/{file_path}",thumb=f"downloads/{thumb_path}",caption=file_path))
                     #response = await switch_upload(file_path,) caption=f"[Direct Link]({response.media_link})",
-                    await app.send_document(DUMP_ID,f"downloads/{file_path}",thumb=f"downloads/{thumb_path}",progress=progress,progress_args=(status,uploadedeps,start_time))
+                    #await app.send_document(DUMP_ID,,,progress=progress,progress_args=(status,uploadedeps,start_time))       
+                 if len(files) == len(episodes):
+                    print("Starting To Upload..")
+                    await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Uploading")
+                    await app.send_media_group(DUMP_ID,files)
+                    await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading")
                     print("Upload Finished...")
                     uploadedeps +=1
-                    await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading")
+                    
         except Exception as e:
             print("Failed To Download Episode", ep)
             print(">> Error: ", e)
