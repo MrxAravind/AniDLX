@@ -73,10 +73,12 @@ async def switch_upload(file):
 
 
 
-async def progress_callback(description, done, total,status,uploadedeps):
-    text = f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading\nDLProgress:{format_bytes(done)} / {format_bytes(total)}"
-    if status.text != text:
-       await status.edit_text(text)
+async def progress_callback(description, done, total,status,uploadedeps,start):
+     current_time = time.time()
+     diff = current_time - start
+     if round(diff % 10.00) == 0 or current == total:
+        text = f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading\nDLProgress:{format_bytes(done)} / {format_bytes(total)}"
+        await status.edit_text(text)
 
 
 
@@ -131,13 +133,14 @@ async def StartDownload():
             for quality,url  in episode_list:
                  file_path = f"{anime.get('name')} - Episode {ep} - {quality}p.mp4"
                  print(f"\n\n>> Downloading Episode {ep} - {quality}p")
+                 start = time.time()
                  downloader = TechZDL(
                               url=url,
                               debug=False,
                               filename=file_path,
                               progress=False,
                               progress_callback=progress_callback,
-                              progress_args=(status,uploadedeps),
+                              progress_args=(status,uploadedeps,start),
                               progress_interval=4,)
                  await downloader.start()
                  file_info = await downloader.get_file_info()
