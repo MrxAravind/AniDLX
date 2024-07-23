@@ -73,7 +73,7 @@ async def progress_callback(description, done, total,status,uploadedeps):
 
 def get_anime():
      with open("AnimeList.txt") as reader:
-         animes = reader.read().split("\n")
+         animes = [i.strip() for i in reader.read().split("\n")]
      with open("AnimeList.txt","w+") as writer:
           for i in animes:
              if i != animes[0]:
