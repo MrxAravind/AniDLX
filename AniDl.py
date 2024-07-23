@@ -8,6 +8,7 @@ from techzdl import TechZDL
 from config import *
 import static_ffmpeg
 import time
+from pyrogram.types import InputMediaPhoto, InputMediaVideo
 
 
 
@@ -48,7 +49,9 @@ async def progress(current, total,status,uploadedeps,start):
      #if round(current / total * 100, 0) % 5 == 0:
          per = f"{current * 100 / total:.1f}%"
          start_time = current_time
-         await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading\nUPProgress:{format_bytes(current)} / {format_bytes(total)} [{per}]")
+         text = f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading\nUPProgress:{format_bytes(current)} / {format_bytes(total)} [{per}]"
+         if status.text != text:
+            await status.edit_text(text)
 
 
 async def upload_progress_handler(progress):
@@ -71,7 +74,9 @@ async def switch_upload(file):
 
 
 async def progress_callback(description, done, total,status,uploadedeps):
-    await status.edit_text(f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading\nDLProgress:{format_bytes(done)} / {format_bytes(total)}")
+    text = f"{status.text}\nDownloaded Eps:{uploadedeps}\nStatus:Downloading\nDLProgress:{format_bytes(done)} / {format_bytes(total)}"
+    if status.text != text:
+       await status.edit_text(text)
 
 
 
