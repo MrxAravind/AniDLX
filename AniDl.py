@@ -8,7 +8,7 @@ from techzdl import TechZDL
 from config import *
 import static_ffmpeg
 import time
-from pyrogram.types import InputMediaPhoto, InputMediaVideo
+from pyrogram.types import InputMediaDocument
 
 
 
